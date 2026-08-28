@@ -49,6 +49,13 @@ describe('RepositoriesController', function() {
       expect(this.scope.type).toEqual('repo type');
       expect(this.scope.settings).toEqual({setting: 'setting1'});
     });
+
+    it('normalizes stringified booleans so checkboxes reflect their state', function() {
+      // elasticsearch returns settings like "readonly" as the strings
+      // "true"/"false" instead of real booleans
+      this.scope.edit('repo name', 'repo type', {readonly: 'true', compress: 'false', bucket: 'some-bucket'});
+      expect(this.scope.settings).toEqual({readonly: true, compress: false, bucket: 'some-bucket'});
+    });
   });
 
   describe('create', function() {
