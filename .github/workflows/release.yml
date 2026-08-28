@@ -20,6 +20,8 @@ jobs:
       with:
         distribution: temurin
         java-version: '11'
+    - name: Set up sbt
+      uses: sbt/setup-sbt@v1
     - name: Build release tarball
       run: sbt universal:packageZipTarball
     - name: Locate artifact
