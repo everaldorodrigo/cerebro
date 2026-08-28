@@ -33,7 +33,19 @@ angular.module('cerebro').controller('RepositoriesController', ['$scope',
     $scope.edit = function(name, type, settings) {
       $scope.name = name;
       $scope.type = type;
-      angular.copy(settings, $scope.settings);
+      var normalizedSettings = {};
+      angular.forEach(settings, function(value, key) {
+        // elasticsearch's repository settings API returns booleans as the
+        // strings "true"/"false" instead of real JSON booleans, which don't
+        // match the ng-true-value/ng-false-value booleans used by the
+        // checkboxes in the create/edit form, so they never appear checked.
+        if (value === 'true' || value === 'false') {
+          normalizedSettings[key] = value === 'true';
+        } else {
+          normalizedSettings[key] = value;
+        }
+      });
+      angular.copy(normalizedSettings, $scope.settings);
     };
 
     $scope.remove = function(name) {
